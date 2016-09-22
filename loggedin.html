@@ -68,41 +68,74 @@
 						</div>
 					</div>
 				</div>
-			</div>		</div>
+			</div>
+			<div class="row">
+				<div class="card" id="history-graph"></div>
+			</div>
+		</div>
 
-			<footer class="page-footer orange">
+		<footer class="page-footer orange">
+			<div class="container">
+				<div class="row">
+					<div class="col l6 s12">
+						<h5 class="white-text">About This</h5>
+						<p class="grey-text text-lighten-4">Our service helps you achieve the correct posture.</p>
+					</div>
+					<div class="col l3 s12">
+						<h5 class="white-text"></h5>
+					</div>
+					<div class="col l3 s12">
+						<h5 class="white-text">Connect</h5>
+						<ul>
+							<li><a class="white-text" href="#!">Twitter</a></li>
+							<li><a class="white-text" href="#!">Facebook</a></li>
+							<li><a class="white-text" href="#!">LinkedIn</a></li>
+							<li><a class="white-text" href="#!">Google Plus</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="footer-copyright">
 				<div class="container">
-					<div class="row">
-						<div class="col l6 s12">
-							<h5 class="white-text">About This</h5>
-							<p class="grey-text text-lighten-4">Our service helps you achieve the correct posture.</p>
-						</div>
-						<div class="col l3 s12">
-							<h5 class="white-text"></h5>
-						</div>
-						<div class="col l3 s12">
-							<h5 class="white-text">Connect</h5>
-							<ul>
-								<li><a class="white-text" href="#!">Twitter</a></li>
-								<li><a class="white-text" href="#!">Facebook</a></li>
-								<li><a class="white-text" href="#!">LinkedIn</a></li>
-								<li><a class="white-text" href="#!">Google Plus</a></li>
-							</ul>
-						</div>
-					</div>
+					Skin by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
 				</div>
-				<div class="footer-copyright">
-					<div class="container">
-						Skin by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
-					</div>
-				</div>
-			</footer>
+			</div>
+		</footer>
 
 
-			<!--  Scripts-->
-			<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-			<script src="js/materialize.js"></script>
-			<script src="js/init.js"></script>
+		<!--  Scripts-->
+		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="js/materialize.js"></script>
+		<script src="js/init.js"></script>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script>
+		$(function () { 
+			$('#history-graph').highcharts({
+				chart: {
+					height: 600,
+					type: 'bar'
+				},
+				title: {
+					text: 'Activity Monitor'
+				},
+				xAxis: {
+					tickInterval: 1,
+					minorTickLength: 1,
+					minorTickInterval: 1,
+					categories: ['Sitting','Standing','Lying on back','Lying on right side','Ascending stairs','Descending stairs','Standing in an elevator still','Moving around in an elevator','Walking in a parking lot','Treadmill 4 km/h flat','Treadmill 15 deg inclined','Running on a treadmill with a speed of 8 km/h','Exercising on a stepper','exercising on a cross trainer','Exercise bike horizontal','Exercise bike vertical','Rowing','Jumping','Playing basketball']
+				},
+				yAxis: {
+					title: {
+						text: 'No. of Activities'
+					}
+				},
+				series: [{
+					name: 'Me',
+					data: [1,2,4,1,2,4,1,2,4,1,2,4,1,2,4,1,2,4,1]
+				}]
+			});
+		});
+		</script>
 
-		</body>
-		</html>
+	</body>
+	</html>
