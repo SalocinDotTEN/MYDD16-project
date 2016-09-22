@@ -1,0 +1,32 @@
+#!/usr/bin/python
+# coding=utf-8
+import urllib
+import urllib2
+import csv
+import json
+import time
+import requests
+
+csvfile = open('C:\\Users\\yong\\Desktop\\data\\data\\A01\\p1a\\s60.txt', 'rb')
+fieldnames = ("number","T1_xacc","T2_yacc","T3_zacc","T4_xgyro","T5_ygyro","T6_zgyro","T7_xmag","T8_ymag","T9_zmag","RA_xacc",
+                  "RA_yacc","RA_zacc","RA_xgyro","RA_ygyro","RA_zgyro","RA_xmag","RA_ymag","RA_zmag","LA_xacc","LA_yacc",
+                  "LA_zacc","LA_xgyro","LA_ygyro","LA_zgyro","LA_xmag","LA_ymag","LA_zmag","RL_xacc","RL_yacc","RL_zacc",
+                  "RL_xgyro","RL_ygyro","RL_zgyro","RL_xmag","RL_ymag","RL_zmag","LL_xacc","LL_yacc","LL_zacc","LL_xgyro",
+                  "LL_ygyro","LL_zgyro","LL_xmag","LL_ymag","LL_zmag")
+reader = csv.DictReader(csvfile, fieldnames)
+next(csvfile)
+b = '"T7_xmag": "-0.79375", "T9_zmag": "0.1338", "RA_yacc": "5.8554", "LA_zgyro": "0.005579", "T1_xacc": "7.9588", "LL_xmag": "0.74072", "LA_zacc": "3.7036", "LL_xacc": "-2.8091", "RL_zacc": "-0.93983", "RA_xmag": "-0.56357", "LA_zmag": "0.073598", "T2_yacc": "1.1239", "LL_zacc": "2.6295", "RL_xgyro": "0.007102", "LA_ymag": "0.33915", "RA_zacc": "7.8412", "RA_zgyro": "-0.011345", "LA_xmag": "-0.64978", "T3_zacc": "5.6168", "LL_ygyro": "-0.002681", "LL_zmag": "-0.057301", "T6_zgyro": "-0.000911", "RL_zmag": "-0.040145", "RL_ygyro": "-0.003019", "T4_xgyro": "0.0069", "LL_ymag": "0.30101", "RL_xmag": "0.73142", "RL_zgyro": "-0.011488", "T8_ymag": "-0.071949", "RA_zmag": "-0.20532", "LA_xacc": "3.3852", "RL_yacc": "9.0638", "LL_yacc": "-9.0846", "LA_yacc": "-8.4667", "T5_ygyro": "0.028915", "RL_ymag": "-0.25441", "RA_ygyro": "0.007151", "RA_ymag": "-0.56834", "LL_xgyro": "-0.000714", "RL_xacc": "-3.5494", "LL_zgyro": "0.00477", "RA_xgyro": "0.007518", "LA_ygyro": "-0.017412", "RA_xacc": "0.58926", "LA_xgyro": "0.004531"'
+for row in reader:
+    #out = row
+    out = json.dumps(row)
+    python_obj = json.loads(out)
+    
+    url = 'http://10.0.122.118/actio/Api/store'
+    payload = python_obj
+#print out
+
+    r = requests.get(url, params=payload)
+#r = requests.post(url, data=json.dumps(payload))
+        #time.sleep(4)
+    print r.text
+    print r.status_code
