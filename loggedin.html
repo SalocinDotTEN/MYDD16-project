@@ -28,6 +28,9 @@
 	<div class="section no-pad-bot" id="index-banner">
 		<div class="container">
 			<div class="row">
+				Current Time: <span id="show-time"></span>
+			</div>
+			<div class="row">
 				<div class="col s12 m6">
 					<div class="card blue-grey darken-1">
 						<div class="card-content white-text">
@@ -108,8 +111,87 @@
 		<script src="js/materialize.js"></script>
 		<script src="js/init.js"></script>
 		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://cdn.rawgit.com/tunnckoCore/randomorg-js/master/dist/randomorg-js.js"></script>
 		<script>
+		function startTime() {
+			var today = new Date();
+			var h = today.getHours();
+			var m = today.getMinutes();
+			var s = today.getSeconds();
+			h = checkTime(h);
+			m = checkTime(m);
+			s = checkTime(s);
+			document.getElementById('show-time').innerHTML =
+			h + ":" + m + ":" + s;
+			var t = setTimeout(startTime, 500);
+		}
+		function checkTime(i) {
+			if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+			return i;
+		}
+
+		// function requestData(){
+		// 	var JsonApi = new RandomJs();
+		// 	var DataResult = JsonApi
+		// 	.apikey('0a217628-d8cb-46df-80a3-27f411d67a16')
+		// 	.method('generateIntegers')
+		// 	.params({n:19,min:0,max:50})
+		// 	.post(function(xhrOrError, stream, body) {
+  //       //in browser:
+  //       //first argument is xhr object
+  //       //second argument is null
+  //       //in node:
+  //       //first argument is error object or null
+  //       //second argument is stream
+  //       console.log('==START==')
+  //       console.log('==xhrOrError==')
+  //       console.log(xhrOrError)
+  //       console.log('==stream==')
+  //       console.log(stream)
+  //       console.log('==body==')
+  //       console.log(body)
+  //       console.log('==END==')
+  //       return body.result.random.data;
+  //   });
+		// }
+
+		function requestData() {
+			$.ajax({
+				url: 'https://api.random.org/json-rpc/1/invoke',
+				dataType: "json",
+				contentType: "application/json-rpc; charset=utf-8",
+				type: "GET",
+				data: {
+					"jsonrpc": "2.0",
+					"method": "generateIntegers",
+					"params": {
+						"apiKey": "0a217628-d8cb-46df-80a3-27f411d67a16",
+						"n": 19,
+						"min": 1,
+						"max": 50,
+						"replacement": true,
+						"base": 10
+					},
+					"id": 749
+				},
+				success: function(point) {
+					console.log(point);
+
+					// var series = chart.series[0],
+     //            shift = series.data.length > 20; // shift if the series is 
+     //                                             // longer than 2
+     //        // add the point
+     //        chart.series[0].addPoint(point.result.random.data, true, shift);
+
+            // call it again after one second
+            setTimeout(requestData, 5000);
+        },
+        cache: false
+    });
+		}
+
 		$(function () { 
+			startTime();
 			$('#history-graph').highcharts({
 				chart: {
 					height: 600,
@@ -131,11 +213,13 @@
 				},
 				series: [{
 					name: 'Me',
-					data: [1,2,4,1,2,4,1,2,4,1,2,4,1,2,4,1,2,4,1]
+					// data: []
+					// data: DataResult.random.data
+					data: [24,18,58,19,73,44,16,55,81,22,14,94,99,32,21,23,38,6,5]
 				}]
 			});
 		});
-		</script>
+</script>
 
-	</body>
-	</html>
+</body>
+</html>
