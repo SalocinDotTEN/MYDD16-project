@@ -35,7 +35,7 @@
 					<div class="card blue-grey darken-1">
 						<div class="card-content white-text">
 							<span class="card-title">Posture Summary</span>
-							<p>Posture here.</p>
+							<p id="curPosture"></p>
 						</div>
 					</div>
 				</div>
@@ -43,7 +43,7 @@
 					<div class="card blue-grey darken-1">
 						<div class="card-content white-text">
 							<span class="card-title">Suggested Posture</span>
-							<p>Suggested posture display here.</p>
+							<p id="suggestPosture"></p>
 						</div>
 					</div>
 				</div>
@@ -55,17 +55,7 @@
 							<span class="card-title">Health Performance</span>
 							<div class="row">
 								<div class="col s12 m12">
-									<div class="card green accent-4 center-align">Good</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col s12 m12">
-									<div class="card yellow accent-4 center-align">Fair</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col s12 m12">
-									<div class="card red accent-4 center-align">Poor</div>
+									<div class="card accent-4 center-align" id="healthStatus"></div>
 								</div>
 							</div>
 						</div>
@@ -190,8 +180,17 @@
     });
 		}
 
-		$(function () { 
+		$(function () {
 			startTime();
+			var curPosture = ['Running', 'Walking', 'Cycling', 'Lying Down'];
+			var suggestPosture = ['Straight back', 'Heel to toe', 'Sit properly', 'Ensure proper sleep position'];
+			var randomPosture = Math.floor(Math.random() * curPosture.length);
+			var healthStatus = ['Good', 'Fair', 'Poor'];
+			var healthClass = ['green', 'yellow', 'red'];
+			var randomHealth = Math.floor(Math.random() * healthStatus.length);
+			$("#curPosture").text(curPosture[randomPosture]);
+			$("#suggestPosture").text(suggestPosture[randomPosture]);
+			$("#healthStatus").text(healthStatus[randomHealth]).addClass(healthClass[randomHealth]);
 			$('#history-graph').highcharts({
 				chart: {
 					height: 600,
@@ -215,7 +214,27 @@
 					name: 'Me',
 					// data: []
 					// data: DataResult.random.data
-					data: [24,18,58,19,73,44,16,55,81,22,14,94,99,32,21,23,38,6,5]
+					data: [
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50),
+					Math.floor(Math.random() * 50)
+					]
 				}]
 			});
 		});
