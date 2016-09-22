@@ -147,40 +147,30 @@
 
 		function requestData() {
 			$.ajax({
-				url: 'https://api.random.org/json-rpc/1/invoke',
+				url: 'http://smartapp.jios.org/actio/Api/getjsondata/activity/',
 				dataType: "json",
 				contentType: "application/json-rpc; charset=utf-8",
 				type: "GET",
 				data: {
-					"jsonrpc": "2.0",
-					"method": "generateIntegers",
-					"params": {
-						"apiKey": "0a217628-d8cb-46df-80a3-27f411d67a16",
-						"n": 19,
-						"min": 1,
-						"max": 50,
-						"replacement": true,
-						"base": 10
-					},
-					"id": 749
+					"c": "*"
 				},
 				success: function(point) {
-					console.log(point);
+					// console.log(point);
 
-					// var series = chart.series[0],
-     //            shift = series.data.length > 20; // shift if the series is 
-     //                                             // longer than 2
-     //        // add the point
-     //        chart.series[0].addPoint(point.result.random.data, true, shift);
+					var series = historyGraph.series[0],
+                shift = series.data.length > 20; // shift if the series is 
+                                                 // longer than 2
+            // add the point
+            historyGraph.series[0].addPoint(point.chartdata, true, shift);
 
             // call it again after one second
-            setTimeout(requestData, 5000);
+            // setTimeout(requestData, 5000);
         },
         cache: false
     });
 		}
 
-		$(function () {
+		$(document).ready(function() {
 			startTime();
 			var curPosture = ['Running', 'Walking', 'Cycling', 'Lying Down'];
 			var suggestPosture = ['Straight back', 'Heel to toe', 'Sit properly', 'Ensure proper sleep position'];
@@ -191,10 +181,14 @@
 			$("#curPosture").text(curPosture[randomPosture]);
 			$("#suggestPosture").text(suggestPosture[randomPosture]);
 			$("#healthStatus").text(healthStatus[randomHealth]).addClass(healthClass[randomHealth]);
-			$('#history-graph').highcharts({
+			historyGraph = new Highcharts.Chart({
 				chart: {
+					renderTo: 'history-graph',
 					height: 600,
-					type: 'bar'
+					type: 'bar',
+					events: {
+						load: requestData
+					}
 				},
 				title: {
 					text: 'Activity Monitor'
@@ -214,29 +208,10 @@
 					name: 'Me',
 					// data: []
 					// data: DataResult.random.data
-					data: [
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50),
-					Math.floor(Math.random() * 50)
-					]
+					data: []
 				}]
 			});
+			// $('#history-graph').chart;
 		});
 </script>
 
