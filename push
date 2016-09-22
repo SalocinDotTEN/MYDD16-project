@@ -21,7 +21,7 @@ for row in reader:
     out = json.dumps(row)
     python_obj = json.loads(out)
     
-    url = 'http://10.0.122.118/actio/Api/store'
+    url = 'http://smartapp.jios.org/actio/Api/store'
     payload = python_obj
 #print out
 
