@@ -1,21 +1,4 @@
 <!DOCTYPE html>
-<?php
-// $activityFeed = file_get_contents('http://smartapp.jios.org/actio/Api/getjsondata/activity/?c=*'); 
-// $feedArray = json_decode($activityFeed, true);
-// foreach ($feedArray['chartdata'] as $key => $value) {
-// 	unset($value['id']);
-// 	$feedArray[] = $value;
-// 	unset($feedArray['chartdata'][$key]);
-// }
-// unset($feedArray['chartdata']);
-// $dataFeed = array_fill(0, 19, 0);
-// foreach ($feedArray as $perFeed) {
-// 	$feedCache = array_values($perFeed);
-// 	foreach ($feedCache as $cacheKey => $cacheVal) {
-// 		$dataFeed[$cacheKey] += (int)$cacheVal;
-// 	}
-// }
-?>
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -31,13 +14,13 @@
 	<nav class="light-blue lighten-1" role="navigation">
 		<div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Actio</a>
 			<ul class="right hide-on-med-and-down">
-				<li><a href="loggedin.php">Dashboard</a></li>
+				<li><a href="loggedin.html">Dashboard</a></li>
 				<li><a href="myprofile.html">My Profile</a></li>
 				<li><a href="index.html">Logout</a></li>
 			</ul>
 
 			<ul id="nav-mobile" class="side-nav">
-				<li><a href="loggedin.php">Dashboard</a></li>
+				<li><a href="loggedin.html">Dashboard</a></li>
 				<li><a href="myprofile.html">My Profile</a></li>
 				<li><a href="index.html">Logout</a></li>
 			</ul>
