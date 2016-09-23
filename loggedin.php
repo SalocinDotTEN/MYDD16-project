@@ -104,6 +104,28 @@
 		<script src="js/init.js"></script>
 		<script src="https://code.highcharts.com/highcharts.js"></script>
 		<script src="https://cdn.rawgit.com/tunnckoCore/randomorg-js/master/dist/randomorg-js.js"></script>
+		<?php
+		$activityFeed = file_get_contents('http://smartapp.jios.org/actio/Api/getjsondata/activity/?c=*'); 
+		$feedArray = json_decode($activityFeed, true);
+		foreach ($feedArray['chartdata'] as $key => $value) {
+			unset($value['id']);
+			$feedArray[] = $value;
+			unset($feedArray['chartdata'][$key]);
+		}
+		unset($feedArray['chartdata']);
+		$dataFeed = array();
+		// $dataFeedInd = 0;
+		foreach ($feedArray as $perFeed) {
+			$feedCache = array_values($perFeed);
+			foreach ($feedCache as $cacheKey => $cacheVal) {
+				$dataFeed[$cacheKey] = 0;
+				if ($cacheVal != NULL) {
+					$dataFeed[$cacheKey] += $cacheVal;
+				}
+			}
+		}
+		var_dump($dataFeed);
+		?>
 		<script>
 		function startTime() {
 			var today = new Date();
@@ -157,7 +179,13 @@
 					"c": "*"
 				},
 				success: function(point) {
-					// console.log(point);
+					for (var outer = point.chartdata.length - 1; outer >= 0; outer--) {
+						console.log(point.chartdata[outer]);
+						// for (var inner = point.chartdata[outer].length - 1; inner >= 0; inner--) {
+						// 	console.log(point.chartdata[outer][inner]);
+						// };
+					};
+					// console.log(point.chartdata[0]);
 
 					var series = historyGraph.series[0],
                 shift = series.data.length > 20; // shift if the series is 
