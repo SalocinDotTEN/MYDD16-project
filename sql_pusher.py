@@ -16,14 +16,17 @@ activities = ['sitting_A1', 'standing_A2', 'lyingonback_A3', 'onrightside_A4', '
 
 while True:
   a = str(np.random.choice(activities))
-  b = int(random()*100)
-  c ='{"%s":["%s"]}'%(a,b)
+  b = int(random()*10)
+
+  c ='{"%s":"%s"}'%(a,b)
+  python_obj = json.loads(c)
   #out = row
   #out = son.dump(b,a)
   #python_obj = json.loads(out)
   
-  url = 'http://smartapp.jios.org/actio/Api/store'
-  payload = c
+  url = 'http://smartapp.jios.org/actio/Api/store_activity'
+
+  payload = python_obj
   print payload
 #print out
 
