@@ -1,4 +1,21 @@
 <!DOCTYPE html>
+<?php
+$activityFeed = file_get_contents('http://smartapp.jios.org/actio/Api/getjsondata/activity/?c=*'); 
+$feedArray = json_decode($activityFeed, true);
+foreach ($feedArray['chartdata'] as $key => $value) {
+	unset($value['id']);
+	$feedArray[] = $value;
+	unset($feedArray['chartdata'][$key]);
+}
+unset($feedArray['chartdata']);
+$dataFeed = array_fill(0, 19, 0);
+foreach ($feedArray as $perFeed) {
+	$feedCache = array_values($perFeed);
+	foreach ($feedCache as $cacheKey => $cacheVal) {
+		$dataFeed[$cacheKey] += (int)$cacheVal;
+	}
+}
+?>
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -14,13 +31,13 @@
 	<nav class="light-blue lighten-1" role="navigation">
 		<div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Actio</a>
 			<ul class="right hide-on-med-and-down">
-				<li><a href="loggedin.html">Dashboard</a></li>
+				<li><a href="loggedin.php">Dashboard</a></li>
 				<li><a href="myprofile.html">My Profile</a></li>
 				<li><a href="index.html">Logout</a></li>
 			</ul>
 
 			<ul id="nav-mobile" class="side-nav">
-				<li><a href="loggedin.html">Dashboard</a></li>
+				<li><a href="loggedin.php">Dashboard</a></li>
 				<li><a href="myprofile.html">My Profile</a></li>
 				<li><a href="index.html">Logout</a></li>
 			</ul>
@@ -104,28 +121,6 @@
 		<script src="js/init.js"></script>
 		<script src="https://code.highcharts.com/highcharts.js"></script>
 		<script src="https://cdn.rawgit.com/tunnckoCore/randomorg-js/master/dist/randomorg-js.js"></script>
-		<?php
-		$activityFeed = file_get_contents('http://smartapp.jios.org/actio/Api/getjsondata/activity/?c=*'); 
-		$feedArray = json_decode($activityFeed, true);
-		foreach ($feedArray['chartdata'] as $key => $value) {
-			unset($value['id']);
-			$feedArray[] = $value;
-			unset($feedArray['chartdata'][$key]);
-		}
-		unset($feedArray['chartdata']);
-		$dataFeed = array();
-		// $dataFeedInd = 0;
-		foreach ($feedArray as $perFeed) {
-			$feedCache = array_values($perFeed);
-			foreach ($feedCache as $cacheKey => $cacheVal) {
-				$dataFeed[$cacheKey] = 0;
-				if ($cacheVal != NULL) {
-					$dataFeed[$cacheKey] += $cacheVal;
-				}
-			}
-		}
-		var_dump($dataFeed);
-		?>
 		<script>
 		function startTime() {
 			var today = new Date();
@@ -169,81 +164,70 @@
   //   });
 		// }
 
-		function requestData() {
-			$.ajax({
-				url: 'http://smartapp.jios.org/actio/Api/getjsondata/activity/',
-				dataType: "json",
-				contentType: "application/json-rpc; charset=utf-8",
-				type: "GET",
-				data: {
-					"c": "*"
-				},
-				success: function(point) {
-					for (var outer = point.chartdata.length - 1; outer >= 0; outer--) {
-						console.log(point.chartdata[outer]);
-						// for (var inner = point.chartdata[outer].length - 1; inner >= 0; inner--) {
-						// 	console.log(point.chartdata[outer][inner]);
-						// };
-					};
-					// console.log(point.chartdata[0]);
-
-					var series = historyGraph.series[0],
+/**
+ * Request data from the server, add it to the graph and set a timeout 
+ * to request again
+ */
+ function requestData() {
+ 	$.ajax({
+ 		url: 'dataFeed.php',
+ 		success: function(point) {
+ 			var series = historyGraph.series[0],
                 shift = series.data.length > 20; // shift if the series is 
-                                                 // longer than 2
-            // add the point
-            historyGraph.series[0].addPoint(point.chartdata, true, shift);
+                                                 // longer than 20
 
+            // add the point
+            historyGraph.series[0].addPoint(point, true, shift);
+            
             // call it again after one second
-            // setTimeout(requestData, 5000);
+            setTimeout(requestData, 3000);
         },
         cache: false
     });
-		}
-
-		$(document).ready(function() {
-			startTime();
-			var curPosture = ['Running', 'Walking', 'Cycling', 'Lying Down'];
-			var suggestPosture = ['Straight back', 'Heel to toe', 'Sit properly', 'Ensure proper sleep position'];
-			var randomPosture = Math.floor(Math.random() * curPosture.length);
-			var healthStatus = ['Good', 'Fair', 'Poor'];
-			var healthClass = ['green', 'yellow', 'red'];
-			var randomHealth = Math.floor(Math.random() * healthStatus.length);
-			$("#curPosture").text(curPosture[randomPosture]);
-			$("#suggestPosture").text(suggestPosture[randomPosture]);
-			$("#healthStatus").text(healthStatus[randomHealth]).addClass(healthClass[randomHealth]);
-			historyGraph = new Highcharts.Chart({
-				chart: {
-					renderTo: 'history-graph',
-					height: 600,
-					type: 'bar',
-					events: {
-						load: requestData
-					}
-				},
-				title: {
-					text: 'Activity Monitor'
-				},
-				xAxis: {
-					tickInterval: 1,
-					minorTickLength: 1,
-					minorTickInterval: 1,
-					categories: ['Sitting','Standing','Lying on back','Lying on right side','Ascending stairs','Descending stairs','Standing in an elevator still','Moving around in an elevator','Walking in a parking lot','Treadmill 4 km/h flat','Treadmill 15 deg inclined','Running on a treadmill with a speed of 8 km/h','Exercising on a stepper','exercising on a cross trainer','Exercise bike horizontal','Exercise bike vertical','Rowing','Jumping','Playing basketball']
-				},
-				yAxis: {
-					title: {
-						text: 'No. of Activities'
-					}
-				},
-				series: [{
-					name: 'Me',
-					// data: []
+ }
+ $(document).ready(function() {
+ 	startTime();
+ 	var curPosture = ['Running', 'Walking', 'Cycling', 'Lying Down'];
+ 	var suggestPosture = ['Straight back', 'Heel to toe', 'Sit properly', 'Ensure proper sleep position'];
+ 	var randomPosture = Math.floor(Math.random() * curPosture.length);
+ 	var healthStatus = ['Good', 'Fair', 'Poor'];
+ 	var healthClass = ['green', 'yellow', 'red'];
+ 	var randomHealth = Math.floor(Math.random() * healthStatus.length);
+ 	$("#curPosture").text(curPosture[randomPosture]);
+ 	$("#suggestPosture").text(suggestPosture[randomPosture]);
+ 	$("#healthStatus").text(healthStatus[randomHealth]).addClass(healthClass[randomHealth]);
+ 	historyGraph = new Highcharts.Chart({
+ 		chart: {
+ 			renderTo: 'history-graph',
+ 			height: 600,
+ 			type: 'bar'
+ 			// events: {
+ 				// load: requestData
+ 			// }
+ 		},
+ 		title: {
+ 			text: 'Activity Monitor'
+ 		},
+ 		xAxis: {
+ 			tickInterval: 1,
+ 			minorTickLength: 1,
+ 			minorTickInterval: 1,
+ 			categories: ['Sitting','Standing','Lying on back','Lying on right side','Ascending stairs','Descending stairs','Standing in an elevator still','Moving around in an elevator','Walking in a parking lot','Treadmill 4 km/h flat','Treadmill 15 deg inclined','Running on a treadmill with a speed of 8 km/h','Exercising on a stepper','exercising on a cross trainer','Exercise bike horizontal','Exercise bike vertical','Rowing','Jumping','Playing basketball']
+ 		},
+ 		yAxis: {
+ 			title: {
+ 				text: 'No. of Activities'
+ 			}
+ 		},
+ 		series: [{
+ 			name: 'Me',
+ 			// data: []
 					// data: DataResult.random.data
-					data: []
+					data: [<?php echo implode($dataFeed, ','); ?>]
 				}]
 			});
-			$("text[text-anchor='end']").hide();
-			// $('#history-graph').chart;
-		});
+ 	setTimeout("location.reload(true);", 3000);
+ });
 </script>
 
 </body>
