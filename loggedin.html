@@ -122,57 +122,15 @@
 			return i;
 		}
 
-		// function requestData(){
-		// 	var JsonApi = new RandomJs();
-		// 	var DataResult = JsonApi
-		// 	.apikey('0a217628-d8cb-46df-80a3-27f411d67a16')
-		// 	.method('generateIntegers')
-		// 	.params({n:19,min:0,max:50})
-		// 	.post(function(xhrOrError, stream, body) {
-  //       //in browser:
-  //       //first argument is xhr object
-  //       //second argument is null
-  //       //in node:
-  //       //first argument is error object or null
-  //       //second argument is stream
-  //       console.log('==START==')
-  //       console.log('==xhrOrError==')
-  //       console.log(xhrOrError)
-  //       console.log('==stream==')
-  //       console.log(stream)
-  //       console.log('==body==')
-  //       console.log(body)
-  //       console.log('==END==')
-  //       return body.result.random.data;
-  //   });
-		// }
-
-/**
- * Request data from the server, add it to the graph and set a timeout 
- * to request again
- */
- // function requestData() {
- // 	$.ajax({
- // 		url: 'dataFeed.php',
- // 		success: function(point) {
- // 			var series = historyGraph.series[0];
- //                shift = series.data.length > 20; // shift if the series is 
- //                                                 // longer than 20
-
- //            // add the point
- //            // historyGraph.series[0].addPoint(point, true, shift);
- //            historyGraph.series[0].setData(point, false);
- //            historyGraph.redraw();
- //            // call it again after one second
- //            setTimeout(requestData, 3000);
- //        },
- //        cache: false
- //    });
- // }
  function showGraph() {
  	$("#history-graph").load("activityMon.php");
+ 	var scrollPos = $(document).scrollTop();
+ 	setTimeout(function(){
+ 		$(document).scrollTop(scrollPos)
+ 	}, 1001);
  	setTimeout(showGraph, 3000);
  }
+
  $(document).ready(function() {
  	startTime();
  	var curPosture = ['Running', 'Walking', 'Cycling', 'Lying Down'];
